@@ -32,6 +32,7 @@ They need the ability to add a Koala to the database. Make a form with the appro
 
 They need the ability for mark a Koala ready for transfer. Each koala in your UI needs a button in that reads 'Ready for Transfer'. When the user clicks on the button, it should update the database for the specific Koala. The 'Ready for Transfer' button should only appear for Koalas that haven't yet been marked ready for transfer.
 
+
 Delivery
 --------
 Upon completion of the project you'll need to provide not only the source (via GitHub url), but also instructions on how the database table should be set up. This can be in a simple `database.sql` file in the repo.
@@ -52,3 +53,16 @@ Upon completion of the project you'll need to provide not only the source (via G
 Your final product may look something like this:
 
 ![sample](sample.png)
+
+
+CREATE TABLE koala (
+    "id" serial PRIMARY KEY,
+    "name" varchar(12) NOT NULL,
+    "gender" varchar(1),
+    "age" integer,
+    "ready_to_transfer" integer,
+    "notes" varchar(120)
+);
+
+INSERT INTO "koala"("name","gender","age","ready_to_transfer","notes")
+VALUES ('Scotty', 'M', '4', 'Y', 'Born in Guatemala'),  ('Jean', 'F', '5', 'Y', 'Allergic to lots of lava'),('Ororo', 'F', '7', 'N', 'Loves listening to Paula (Abdul)'), ('Logan', 'M', '15', 'N', 'Loves the sauna'), ('Charlie','M', '9','Y', 'Favorite band is Nirvana'),('Besty','F','4','Y','Has a pet iguana')
