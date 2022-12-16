@@ -4,10 +4,11 @@ $( document ).ready( function(){
   console.log( 'JQ' );
   // Establish Click Listeners
   setupClickListeners()
+
   // load existing koalas on page load
   getKoalas();
 
-  $('#viewKoalas').on('click', '#transfer', ()=>{console.log('hello')})
+  
 }); // end doc ready
 
 function setupClickListeners() {
@@ -19,12 +20,12 @@ function setupClickListeners() {
     if($('#nameIn').val() && $('#ageIn').val() && $('#genderIn').val() && $('#readyForTransferIn').val()){
       let koalaToSend = {
         name: $('#nameIn').val(),
-        age: $('#ageIn').val(),
+        age: parseInt($('#ageIn').val()),
         gender: $('#genderIn').val(),
         readyForTransfer: $('#readyForTransferIn').val(),
         notes: $('#notesIn').val(),
       };
-      saveKoala( koalaToSend );
+      saveKoala(koalaToSend);
     }
     else{
       alert('invalid input')
@@ -32,7 +33,24 @@ function setupClickListeners() {
 
 
   }); 
-}
+
+
+  $('#viewKoalas').on('click', '#transfer', function(){
+    let id = $(this).parent().parent().data('id');
+    
+    $.ajax({
+      method: 'PUT',
+      url:`/koalas/transfer/${id}`,
+      data: {newTransfer: 'Y'}
+    })
+    .then((response)=>{
+      getKoalas();
+    })
+    .catch((response)=>{
+      console.log("error in PUT request")
+    });
+   });
+};
 
 function getKoalas() {
   console.log( 'in getKoalas' );
@@ -40,13 +58,16 @@ function getKoalas() {
   $('#viewKoalas').empty();
   $.ajax({
     method: 'GET',
-    url:'koalas'
+    url:'/koalas'
   })
   .then((response)=>{
     console.log(response)
     renderKoala(response)
   })
 } // end getKoalas
+
+
+
 
 function saveKoala( newKoala ) {
   console.log( 'in saveKoala', newKoala );
@@ -64,6 +85,8 @@ function saveKoala( newKoala ) {
   })
 };
 
+
+
 function renderKoala(arr) {
   for (let i = 0; i < arr.length; i++) {
 
@@ -78,8 +101,9 @@ function renderKoala(arr) {
       <td><button>Delete</button></td>
       </tr>
       `).appendTo('#viewKoalas')
-    }else{
-      $(`<tr>
+    }
+    else{
+      $(`<tr data-id="${arr[i].id}">
     <td>${arr[i].name}</td>
     <td>${arr[i].gender}</td>
     <td>${arr[i].age}</td>
@@ -95,5 +119,5 @@ function renderKoala(arr) {
 };
 
 function transfer(){
-  console.log('hello')
-};
+
+}

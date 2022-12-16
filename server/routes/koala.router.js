@@ -43,14 +43,19 @@ koalaRouter.get('/', (req, res) => {
 // POST
 koalaRouter.post('/', (req, res) => {
     // router code
-   
-    const newKoala = req.body;
-    console.log(newKoala)
+    const {
+        name,
+        age,
+        gender,
+        readyForTransfer,
+        notes
+    } = req.body;
+
+    console.log(name)
+
     const queryText = `
-        INSERT INTO koala 
-            (name, gender, age, ready_to_transfer, notes)
-        VALUES 
-            ('${newKoala.name}', '${newKoala.gender}', '${newKoala.age}', '${newKoala.ready_to_transfer}', '${newKoala.notes}');
+        INSERT INTO "koala" (name, gender, age, ready_to_transfer, notes)
+        VALUES ('${name}', '${gender}', '${age}', '${readyForTransfer}', '${notes}');
     `;
     pool.query(queryText)
     .then((result) => {
@@ -63,7 +68,20 @@ koalaRouter.post('/', (req, res) => {
 });
 
 // PUT
+koalaRouter.put('/transfer/:id', (req,res)=>{
+    const selectedKoala = req.params.id;
+    const transMod = req.body.newTransfer;
+    let queryText = `UPDATE koala SET ready_to_transfer = 'Y' WHERE id=$1;`;
 
+    pool.query(queryText, [selectedKoala])
+    .then((dbResponse) => {
+      res.send(dbResponse.rows);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.sendStatus(500);
+    });
+})
 
 // DELETE
 
